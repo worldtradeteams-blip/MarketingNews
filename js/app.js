@@ -12,7 +12,14 @@ const STATE = {
   classroom: false,
 };
 
-const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+// Multiple CORS relays in priority order — a single free relay often rate-limits
+// or times out when many requests fire at once, which is why most sources showed
+// "unavailable". We now retry each source across relays before giving up.
+const CORS_PROXIES = [
+  "https://api.allorigins.win/raw?url=",
+  "https://corsproxy.io/?url=",
+  "https://api.codetabs.com/v1/proxy?quest="
+];
 
 // ---------- Boot ----------
 async function init() {
@@ -37,7 +44,14 @@ async function loadSources() {
 // ---------- Live fetch (best-effort, never blocks UI) ----------
 async function attemptLiveFetch() {
   setStatus("Refreshing…");
-  const results = await Promise.all(STATE.sources.filter(s => s.enabled).map(fetchSource));
+  const enabled = STATE.sources.filter(s => s.enabled);
+  // Fetch sequentially with a small stagger instead of all-at-once: free CORS
+  // relays throttle/drop concurrent bursts, which was causing widespread timeouts.
+  const results = [];
+  for (const src of enabled) {
+    results.push(await fetchSource(src));
+    await new Promise(r => setTimeout(r, 250));
+  }
   results.forEach(r => { if (r && r.items) STATE.cases = dedupe([...STATE.cases, ...r.items]); });
   renderSourceHealth();
   renderSection();
@@ -45,17 +59,23 @@ async function attemptLiveFetch() {
 }
 
 async function fetchSource(src) {
-  try {
-    const res = await fetch(CORS_PROXY + encodeURIComponent(src.url), { signal: AbortSignal.timeout(8000) });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const text = await res.text();
-    const items = parseRSS(text, src);
-    STATE.sourceHealth[src.name] = { status: "active", lastFetch: new Date().toISOString(), count: items.length, error: null };
-    return { items };
-  } catch (e) {
-    STATE.sourceHealth[src.name] = { status: "unavailable", lastFetch: null, count: 0, error: (e.message || "fetch failed") };
-    return { items: [] };
+  let lastErr = null;
+  for (const proxy of CORS_PROXIES) {
+    try {
+      const res = await fetch(proxy + encodeURIComponent(src.url), { signal: AbortSignal.timeout(12000) });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const text = await res.text();
+      const items = parseRSS(text, src);
+      if (!items.length) throw new Error("empty response");
+      STATE.sourceHealth[src.name] = { status: "active", lastFetch: new Date().toISOString(), count: items.length, error: null };
+      return { items };
+    } catch (e) {
+      lastErr = e;
+      continue; // try next relay
+    }
   }
+  STATE.sourceHealth[src.name] = { status: "unavailable", lastFetch: null, count: 0, error: (lastErr && lastErr.message) || "fetch failed" };
+  return { items: [] };
 }
 
 function parseRSS(xmlText, src) {
