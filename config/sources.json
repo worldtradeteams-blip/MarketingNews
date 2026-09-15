@@ -1,0 +1,11 @@
+[
+  {"name":"Marketing Week","type":"rss","url":"https://www.marketingweek.com/feed/","category":"marketing","reliability":"SPECIALIST_MARKETING","priority":10,"enabled":true},
+  {"name":"Adweek","type":"rss","url":"https://www.adweek.com/feed/","category":"marketing","reliability":"SPECIALIST_MARKETING","priority":10,"enabled":true},
+  {"name":"Campaign","type":"rss","url":"https://www.campaignlive.co.uk/rss","category":"marketing","reliability":"SPECIALIST_MARKETING","priority":9,"enabled":true},
+  {"name":"The Drum","type":"rss","url":"https://www.thedrum.com/rss","category":"marketing","reliability":"SPECIALIST_MARKETING","priority":9,"enabled":true},
+  {"name":"Marketing Dive","type":"rss","url":"https://www.marketingdive.com/feeds/news/","category":"marketing","reliability":"SPECIALIST_MARKETING","priority":9,"enabled":true},
+  {"name":"Ad Age","type":"rss","url":"https://adage.com/feed","category":"marketing","reliability":"SPECIALIST_MARKETING","priority":8,"enabled":true},
+  {"name":"Fast Company","type":"rss","url":"https://www.fastcompany.com/latest/rss","category":"business","reliability":"MAJOR_BUSINESS_MEDIA","priority":7,"enabled":true},
+  {"name":"Digiday","type":"rss","url":"https://digiday.com/feed/","category":"marketing","reliability":"SPECIALIST_MARKETING","priority":8,"enabled":true},
+  {"name":"Vogue Business","type":"rss","url":"https://www.voguebusiness.com/feed/rss","category":"fashion","reliability":"SPECIALIST_MARKETING","priority":7,"enabled":true}
+]

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Marketing Intelligence</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brandmark">Global Marketing <span>Intelligence</span></div>
+  <div class="toolbar">
+    <span id="source-mini"></span>
+    <span id="status-text">Last updated: —</span>
+    <button id="refresh-btn">Refresh Now</button>
+    <button class="theme-btn" data-theme="light">☀ Light</button>
+    <button class="theme-btn" data-theme="dark">🌙 Dark</button>
+    <button class="theme-btn" data-theme="system">System</button>
+  </div>
+</header>
+
+<nav class="main-nav">
+  <div class="nav-item" data-section="today">Today</div>
+  <div class="nav-item" data-section="week">This Week</div>
+  <div class="nav-item" data-section="trending">Trending</div>
+  <div class="nav-item" data-section="library">Case Library</div>
+  <div class="nav-item" data-section="brands">Top Brands</div>
+  <div class="nav-item" data-section="concepts">Marketing Concepts</div>
+  <div class="nav-item" data-section="sources">Sources</div>
+  <div class="nav-item" data-section="saved">Saved</div>
+</nav>
+
+<div class="filters">
+  <input id="search-input" type="text" placeholder="Search brand, concept, industry, keyword…">
+  <select id="score-filter">
+    <option value="65">Score 65+</option>
+    <option value="75">Score 75+</option>
+    <option value="85">Score 85+</option>
+  </select>
+  <select id="area-filter">
+    <option value="all">All areas</option>
+    <option value="Brand Strategy">Brand Strategy</option>
+    <option value="AI Marketing">AI</option>
+    <option value="Experiential Marketing">Experiential</option>
+    <option value="Influencer Marketing">Influencer</option>
+    <option value="International Marketing">International</option>
+    <option value="Consumer">Consumer Insight</option>
+  </select>
+  <select id="industry-filter">
+    <option value="all">All industries</option>
+    <option value="Technology">Technology</option>
+    <option value="Retail">Retail</option>
+    <option value="Fashion">Fashion</option>
+    <option value="Automotive">Automotive</option>
+    <option value="Food & Beverage">Food & Beverage</option>
+    <option value="Financial Services">Financial Services</option>
+    <option value="Travel">Travel</option>
+    <option value="Entertainment">Entertainment</option>
+    <option value="Other">Other</option>
+  </select>
+  <select id="geo-filter">
+    <option value="all">All regions</option>
+    <option value="Global">Global</option>
+    <option value="North America">North America</option>
+    <option value="Europe">Europe</option>
+    <option value="Asia">Asia</option>
+    <option value="Middle East">Middle East</option>
+    <option value="Latin America">Latin America</option>
+    <option value="Africa">Africa</option>
+    <option value="Oceania">Oceania</option>
+  </select>
+</div>
+
+<main id="content"></main>
+
+<footer>Global Marketing Intelligence — headlines, links and short summaries only. Full articles remain the property of their original publishers.</footer>
+
+<script src="js/seedCases.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
