@@ -45,13 +45,18 @@ async function loadSources() {
 async function attemptLiveFetch() {
   setStatus("Refreshing…");
   const enabled = STATE.sources.filter(s => s.enabled);
-  // Fetch sequentially with a small stagger instead of all-at-once: free CORS
-  // relays throttle/drop concurrent bursts, which was causing widespread timeouts.
-  const results = [];
-  for (const src of enabled) {
-    results.push(await fetchSource(src));
-    await new Promise(r => setTimeout(r, 250));
-  }
+  // Fetch all sources in parallel (fast), but update each row on the Source
+  // Health table the moment THAT source resolves, instead of waiting for
+  // every source to finish before showing anything (which left the whole
+  // table stuck on "unknown" for a long time).
+  const promises = enabled.map(src =>
+    fetchSource(src).then(r => {
+      renderSourceHealth();
+      if (STATE.section === "sources") renderSection();
+      return r;
+    })
+  );
+  const results = await Promise.all(promises);
   results.forEach(r => { if (r && r.items) STATE.cases = dedupe([...STATE.cases, ...r.items]); });
   renderSourceHealth();
   renderSection();
